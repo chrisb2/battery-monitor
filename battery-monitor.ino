@@ -1,17 +1,19 @@
 #define VCC 3273
 #define BATTERY_PIN A0
-#define R1 21440 // Resistor R1 Ohms
-#define R2 3242 // Resistor R2 Ohms
+#define R1 221200 // Resistor R1 Ohms
+#define R2 21440 // Resistor R2 Ohms
 #define CONNECT_WAIT_MILLIS 5000
-//#define SLEEP_SECS 15
-#define SLEEP_SECS 300
-//#define SLEEP_SECS 3600
+#define LOW_THRESHOLD 12000 // milliVolts
+//#define SLEEP_SECS 15 // 15 seconds
+//#define SLEEP_SECS 900 // 15 minutes
+#define SLEEP_SECS 3600 // 1 hour
 
 // Set manual mode so that if no network is available at startup, photon can go back to sleep
 SYSTEM_MODE(MANUAL);
 
 const float DIV_RATIO = (R1 + R2) / (float) R2;
 const char VOLTAGE_EVENT[11] = "carVoltage";
+const char LOW_EVENT[14] = "carLowVoltage";
 
 // set to true when the photon can sleep
 volatile bool canSleep = false;
@@ -35,11 +37,15 @@ void subscribeToVoltageEvent() {
 }
 
 void publishVoltageEvent() {
-    char mV[8];
-    getBatteryMilliVolts();
+    char eventData[5];
+    uint16_t milliVolts = getBatteryMilliVolts();
     delay(10);
-    sprintf(mV, "%d", getBatteryMilliVolts());
-    Particle.publish(VOLTAGE_EVENT, mV, 60, PRIVATE);
+    milliVolts = getBatteryMilliVolts();
+    sprintf(eventData, "%.1f", milliVolts / 1000.0);
+    if (milliVolts < LOW_THRESHOLD) {
+        Particle.publish(LOW_EVENT, eventData, 60, PRIVATE);
+    }
+    Particle.publish(VOLTAGE_EVENT, eventData, 60, PRIVATE);
 }
 
 void waitForVoltageEvent() {
