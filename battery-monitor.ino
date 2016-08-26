@@ -3,34 +3,39 @@
 #define R1 21440 // Resistor R1 Ohms
 #define R2 3242 // Resistor R2 Ohms
 #define CONNECT_WAIT_MILLIS 5000
-#define SLEEP_SECS 15
+//#define SLEEP_SECS 15
+#define SLEEP_SECS 300
 //#define SLEEP_SECS 3600
 
+// Set manual mode so that if no network is available at startup, photon can go back to sleep
 SYSTEM_MODE(MANUAL);
 
-const float DIV_RATIO = (R2 + R1) / (float) R2;
+const float DIV_RATIO = (R1 + R2) / (float) R2;
 const char VOLTAGE_EVENT[11] = "carVoltage";
 
-volatile bool canSleep = false; // set to true when the photon can sleep
+// set to true when the photon can sleep
+volatile bool canSleep = false;
 
 void setup() {
     disableLed();
-    
-    pinMode(BATTERY_PIN, INPUT);
-    
-    Particle.subscribe(VOLTAGE_EVENT, subscribeHandler, MY_DEVICES);
+
     Particle.connect();
     if (waitFor(Particle.connected, CONNECT_WAIT_MILLIS)) {
+        subscribeToVoltageEvent();
         publishVoltageEvent();
+        // Listen for voltage event to make sure it was published before sleeping
         waitForVoltageEvent();
     }
+
     System.sleep(SLEEP_MODE_DEEP, SLEEP_SECS);
 }
 
-void loop() {}
+void subscribeToVoltageEvent() {
+    Particle.subscribe(VOLTAGE_EVENT, subscribeHandler, MY_DEVICES);
+}
 
 void publishVoltageEvent() {
-    char mV[20];
+    char mV[8];
     getBatteryMilliVolts();
     delay(10);
     sprintf(mV, "%d", getBatteryMilliVolts());
