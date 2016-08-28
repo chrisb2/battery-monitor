@@ -32,10 +32,10 @@ module.exports = {
 * 1N4747 Zener Diode, 20V, 1 Watt
 * 1000uF 35V Electrolytic Capacitor
 * 0.1uF 50V Ceramic Capacitor
-* 150uH RF Choke, 4.2ohm, 175mA max
-* 1K Resistor
-* 220K Resistor
-* 22K Resistor
+* 150uH RF Choke, 4.2&omega;, 175mA max
+* 1K&omega; Resistor
+* 220K&omega; Resistor
+* 22K&omega; Resistor
 
 ## References
 
