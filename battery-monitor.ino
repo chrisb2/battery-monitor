@@ -4,8 +4,8 @@
 #define R2 21440 // Resistor R2 Ohms
 #define CONNECT_WAIT_MILLIS 5000
 #define LOW_THRESHOLD 12000 // milliVolts
-//#define SLEEP_SECS 3600 // 1 hour
-#define SLEEP_SECS 15
+#define SLEEP_SECS 3600 // 1 hour
+//#define SLEEP_SECS 15
 
 // Set manual mode so that if no network is available, photon can go back to sleep
 SYSTEM_MODE(MANUAL);
@@ -18,7 +18,7 @@ const char FLASH_READY[13] = "flashReady";
 
 // set to true when the photon can sleep
 volatile bool canSleep = false;
-// set to true when photon is waiting for OTA
+// set to true when photon is waiting for OTA update
 volatile bool flashing = false;
 
 void setup() {
@@ -50,9 +50,10 @@ void loop() {
 void signalReadyForFlash() {
     RGB.color(0, 255, 0);
     delay(500);
-    RGB.brightness(20);
-    delay(500);
+    RGB.brightness(5);
+    delay(50);
     RGB.brightness(0);
+    Particle.process();
 }
 
 void subscribeToVoltageEvent() {

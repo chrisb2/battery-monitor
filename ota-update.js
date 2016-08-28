@@ -11,7 +11,7 @@ particle.login({
     password: auth.password
 }).then(
     function(data) {
-        console.log('Login success: ', data.body.access_token);
+        console.log('Login success');
 
         particle.getEventStream({
             deviceId: auth.device,
