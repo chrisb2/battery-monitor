@@ -6,7 +6,7 @@ The program uses the deep sleep mode of the Photon between voltage measurements,
 
 ![circuit diagram](circuit/battery-monitor.png?raw=true "Title")
 
-# BOM
+## BOM
 
 * Particle Photon
 * Traco Power TSR-1-2450 DC/DC Step-Down Converter
@@ -17,3 +17,8 @@ The program uses the deep sleep mode of the Photon between voltage measurements,
 * 1K Resistor
 * 220K Resistor
 * 22K Resistor
+
+## References
+
+[Power Filter/Regulator Circuit](http://linuxcar.sone.jp/reg.en.html)
+[Powering Arduino and switches from 12V automotive battery](http://www.eevblog.com/forum/projects/powering-arduino-and-switches-from-12v-automotive-battery/msg687838/#msg687838)
