@@ -18,7 +18,6 @@ particle.login({
             auth: auth.token
         }).then(function(stream) {
             stream.on('event', function(data) {
-                // console.log("Event: " + data.name + ", " + data.data);
                 if (data.name == "spark/status" && data.data == "online") {
                     var publishEventPr = particle.publishEvent({
                         name: 'flashRequest',
