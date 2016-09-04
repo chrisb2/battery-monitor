@@ -21,6 +21,8 @@ module.exports = {
 
 ![circuit diagram](circuit/battery-monitor.png?raw=true "Battery Monitor Circuit")
 
+The 20V Zenner and the ratio of R1/R2 means that voltage seen by the Photon at A0 cannot exceed 1.8V.
+
 ## Completed Project
 
 ![project](circuit/circuit-box.jpg?raw=true "Battery Monitor Project")
@@ -36,6 +38,8 @@ module.exports = {
 * 1K&Omega; Resistor
 * 220K&Omega; Resistor
 * 22K&Omega; Resistor
+* 2 core cable (2 Meters)
+* Solder tags (6mm ID) x 2
 
 ## References
 
