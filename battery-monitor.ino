@@ -2,7 +2,7 @@
 #define BATTERY_PIN A0
 #define R1 221200 // Resistor R1 Ohms
 #define R2 21440 // Resistor R2 Ohms
-#define CONNECT_WAIT_MILLIS 5000
+#define CONNECT_WAIT_MILLIS 10000
 #define LOW_THRESHOLD 12000 // milliVolts
 #define SLEEP_SECS 3600 // 1 hour
 //#define SLEEP_SECS 15
