@@ -40,6 +40,8 @@ The 20V Zenner and the ratio of R1/R2 means that voltage seen by the Photon at A
 * 22K&Omega; Resistor
 * 2 core cable (2 Meters)
 * Solder tags (6mm ID) x 2
+* Waterproof box (with silicone rubber seal)
+* Silicone sealant (for cable exit)
 
 ## References
 
