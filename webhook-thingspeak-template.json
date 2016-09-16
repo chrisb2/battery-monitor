@@ -1,0 +1,12 @@
+{
+    "event": "carVoltage",
+    "url": "https://api.thingspeak.com/update",
+    "requestType": "POST",
+    "query": {
+        "key": "<thing-api-key>",
+        "field1": "{{PARTICLE_EVENT_VALUE}}"
+    },
+	"noDefaults": true,
+	"mydevices": true,
+    "deviceid": "<particle-device-id>"
+}
