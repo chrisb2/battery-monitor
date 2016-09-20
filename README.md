@@ -44,6 +44,7 @@ The project needs to be installed somewhere near the engine bay where the WiFi s
 * 1K&Omega; Resistor
 * 220K&Omega; Resistor
 * 22K&Omega; Resistor
+* In-line fuse holder and 250mA fuse
 * 2 core cable (2 Meters)
 * Solder tags (6mm ID) x 2
 * Waterproof box (with silicone rubber seal)
