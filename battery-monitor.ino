@@ -4,6 +4,7 @@
 #define R2 21440 // Resistor R2 Ohms
 #define CONNECT_WAIT_MILLIS 10000
 #define LOW_THRESHOLD 12000 // milliVolts
+#define ADC_SAMPLES 20
 #define SLEEP_SECS 3600 // 1 hour
 //#define SLEEP_SECS 15
 
@@ -70,9 +71,7 @@ void publishFlashReadyEvent() {
 
 void publishVoltageEvent() {
     char eventData[5];
-    uint16_t milliVolts = getBatteryMilliVolts();
-    delay(10);
-    milliVolts = getBatteryMilliVolts();
+    uint16_t milliVolts = getAvgBatteryMilliVolts();
     sprintf(eventData, "%.1f", milliVolts / 1000.0);
     if (milliVolts < LOW_THRESHOLD) {
         Particle.publish(LOW_EVENT, eventData, 60, PRIVATE);
@@ -105,6 +104,15 @@ void subscribeHandler(const char* event, const char* data) {
 
 void flashEventHandler(const char* event, const char* data) {
     flashing = true;
+}
+
+uint16_t getAvgBatteryMilliVolts() {
+    uint16_t mV = 0;
+    for (int i = 0; i < ADC_SAMPLES; i++) {
+        mV += readMilliVolts(BATTERY_PIN);
+        delay(3);
+    }
+    return round(mV * DIV_RATIO / (float) ADC_SAMPLES);
 }
 
 uint16_t getBatteryMilliVolts() {
