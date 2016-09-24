@@ -5,6 +5,7 @@
 #define CONNECT_WAIT_MILLIS 10000
 #define LOW_THRESHOLD 12000 // milliVolts
 #define ADC_SAMPLES 20
+#define ADC_DISPERSED 2
 #define SLEEP_SECS 3600 // 1 hour
 //#define SLEEP_SECS 15
 
@@ -71,7 +72,7 @@ void publishFlashReadyEvent() {
 
 void publishVoltageEvent() {
     char eventData[5];
-    uint16_t milliVolts = getAvgBatteryMilliVolts();
+    uint16_t milliVolts = getCentralAvgBatteryMilliVolts();
     sprintf(eventData, "%.1f", milliVolts / 1000.0);
     if (milliVolts < LOW_THRESHOLD) {
         Particle.publish(LOW_EVENT, eventData, 60, PRIVATE);
@@ -106,8 +107,28 @@ void flashEventHandler(const char* event, const char* data) {
     flashing = true;
 }
 
+// Averaging of N-X ADC samples as per ST Application Note AN4073
+uint16_t getCentralAvgBatteryMilliVolts() {
+    uint32_t mV = 0;
+    uint16_t readings[ADC_SAMPLES];
+
+    for (int i = 0; i < ADC_SAMPLES; i++) {
+        readings[i] = readMilliVolts(BATTERY_PIN);
+        delay(3);
+    }
+
+    qsort(readings, ADC_SAMPLES, sizeof(uint16_t), uint16Compare);
+
+    for (int i = ADC_DISPERSED; i < ADC_SAMPLES - ADC_DISPERSED; i++) {
+        mV += readings[i];
+    }
+
+    return round(mV * DIV_RATIO / (float) ADC_SAMPLES - (2 * ADC_DISPERSED));
+}
+
+// Averaging of N ADC samples as per ST Application Note AN4073
 uint16_t getAvgBatteryMilliVolts() {
-    uint16_t mV = 0;
+    uint32_t mV = 0;
     for (int i = 0; i < ADC_SAMPLES; i++) {
         mV += readMilliVolts(BATTERY_PIN);
         delay(3);
@@ -122,4 +143,17 @@ uint16_t getBatteryMilliVolts() {
 
 uint16_t readMilliVolts(int pin) {
 	return map(analogRead(pin), 0, 4095, 0, VCC);
+}
+
+int uint16Compare (const void *pa, const void *pb) {
+    uint16_t a = *(const uint16_t *) pa;
+    uint16_t b = *(const uint16_t *) pb;
+
+    if (a < b) {
+        return -1;
+    } else if (a > b) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
