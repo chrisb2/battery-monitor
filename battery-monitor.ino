@@ -119,11 +119,11 @@ uint16_t getCentralAvgBatteryMilliVolts() {
 
     qsort(readings, ADC_SAMPLES, sizeof(uint16_t), uint16Compare);
 
-    for (int i = ADC_DISPERSED; i < ADC_SAMPLES - ADC_DISPERSED; i++) {
+    for (int i = ADC_DISPERSED; i < (ADC_SAMPLES - ADC_DISPERSED); i++) {
         mV += readings[i];
     }
 
-    return round(mV * DIV_RATIO / (float) ADC_SAMPLES - (2 * ADC_DISPERSED));
+    return round(mV * DIV_RATIO / (float) (ADC_SAMPLES - (2 * ADC_DISPERSED)));
 }
 
 // Averaging of N ADC samples as per ST Application Note AN4073
