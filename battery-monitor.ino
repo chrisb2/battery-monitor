@@ -26,11 +26,14 @@ volatile bool flashing = false;
 void setup() {
     disableLed();
 
+    // Measure voltage before connecting to avoid ADC noise due to network activity
+    uint16_t batteryMillivolts = getCentralAvgBatteryMilliVolts();
+
     Particle.connect();
     if (waitFor(Particle.connected, CONNECT_WAIT_MILLIS)) {
         subscribeToFlashEvent();
         subscribeToVoltageEvent();
-        publishVoltageEvent();
+        publishVoltageEvent(batteryMillivolts);
         // Listen for voltage event to make sure it was published before sleeping
         waitForVoltageEvent();
         waitForFlashEvent();
@@ -70,9 +73,8 @@ void publishFlashReadyEvent() {
     Particle.publish(FLASH_READY, PRIVATE);
 }
 
-void publishVoltageEvent() {
+void publishVoltageEvent(uint16_t milliVolts) {
     char eventData[5];
-    uint16_t milliVolts = getCentralAvgBatteryMilliVolts();
     sprintf(eventData, "%.1f", milliVolts / 1000.0);
     if (milliVolts < LOW_THRESHOLD) {
         Particle.publish(LOW_EVENT, eventData, 60, PRIVATE);
